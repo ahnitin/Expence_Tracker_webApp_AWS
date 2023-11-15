@@ -24,33 +24,25 @@ exports.PostSignup = (req,res,next)=>{
 exports.PostLogin = (req,res,next)=>{
     const email = req.body.email;
     const password = req.body.password;
+    //console.log(email,password);
     Users.findOne({where:{email:email}})
     .then(result=>{
-        if(result ==  null)
+        if(result === null)
         {
             res.status(404).json({
                 result: result
             })
         }
-        else
+        else if(result.password ===  password)
         {
-            Users.findOne({where:{email:email,password:password}})
-            .then(result=>{
-                if(result.password ===  password)
-                {
-                    res.status(201).json({
-                        result:result
-                    })
-                }
-                else
-                {
-                    res.status(403).json({
-                        result:result
-                    })
-                }
+            res.status(201).json({
+                result:result
             })
-            .catch(err=>{
-                console.log(err);
+        }
+        else if(result.password != password)
+        {
+            res.status(401).json({
+                result:result
             })
         }
     })

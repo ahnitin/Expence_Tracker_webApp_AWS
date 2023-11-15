@@ -14,13 +14,13 @@ async function LoginUser(event)
         let res = await axios.post("http://localhost:3002/login",obj)
         if(res.status === 201)
         {
-            alert("Successfully Logged In");
+            alert("User login sucessful");
         }
-        if(res.status === 403)
+        else if(res.status === 401)
         {
-            alert("Incorrect Password");
+            alert("User Not authorized");
         }
     } catch (error) {
-        document.body.innerHTML+= `<div style="color:red;">User Exists ${error} </div>`;
+        document.body.innerHTML+= `<div style="color:red;">User not found ${error} </div>`;
     }
 }

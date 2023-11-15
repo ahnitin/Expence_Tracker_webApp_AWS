@@ -24,7 +24,6 @@ async function AddUserToDatabase(obj)
             alert("User Added successfully")
         }
     } catch (error) {
-        alert("user exists")
         document.body.innerHTML += `<div style="color:red;">${error}</div>`
     }
     
