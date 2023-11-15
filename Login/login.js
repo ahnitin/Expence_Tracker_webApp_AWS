@@ -16,11 +16,7 @@ async function LoginUser(event)
         {
             alert("User login sucessful");
         }
-        else if(res.status === 401)
-        {
-            alert("User Not authorized");
-        }
     } catch (error) {
-        document.body.innerHTML+= `<div style="color:red;">User not found ${error} </div>`;
+        document.body.innerHTML+= `<div style="color:red;"> ${error} </div>`;
     }
 }
