@@ -6,14 +6,17 @@ const Users = sequelize.define("user",{
         autoIncrement:true,
         allowNull: false,
         primaryKey: true,
+        unique: true,
     },
     username:{
         type: Sequelize.STRING,
         allowNull: false,
+        unique:true,
     },
     email:{
         type:Sequelize.STRING,
         allowNull: false,
+        unique: true,
     },
     password:{
         type:Sequelize.STRING,
