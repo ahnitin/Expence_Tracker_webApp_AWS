@@ -34,15 +34,18 @@ exports.PostLogin = (req,res,next)=>{
                 success:false,message: "User Doesnot Exists",
             })
         }
+        else{
         bcrypt.compare(password, result.password,(err,response)=>{
+            if(err)
+            {
+                res.status(401).json({success:false,message:"Password Is Incorrect"})
+            }
             if(!err)
             {
               res.status(201).json({success: true, message: "user Logged In Successfully"});
             }
-            else{
-                return res.status(401).json({success:false,message:"Password Is Incorrect"})
-            }
         })
+        }   
     })
     .catch(error=>{
         res.status(500).json({

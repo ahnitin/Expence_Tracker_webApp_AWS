@@ -16,6 +16,7 @@ async function LoginUser(event)
         {
             alert("User login sucessful");
         }
+        
     } catch (error) {
         document.body.innerHTML+= `<div style="color:red;"> ${error} </div>`;
     }
