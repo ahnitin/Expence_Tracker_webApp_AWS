@@ -1,48 +1,49 @@
-const Expense = require('../models/expenses');
+const Expense = require("../models/expence");
+const User = require("../models/user");
 
-const addexpense = (req, res) => {
-    const { expenseamount, description, category } = req.body;
-
-    if(expenseamount == undefined || expenseamount.length === 0 ){
-        return res.status(400).json({success: false, message: 'Parameters missing'})
-    }
+exports.addExpense = async (req,res)=>{
     
-    Expense.create({ expenseamount, description, category, userId: req.user.id}).then(expense => {
-        return res.status(201).json({expense, success: true } );
-    }).catch(err => {
-        return res.status(500).json({success : false, error: err})
-    })
-}
-
-const getexpenses = (req, res)=> {
-    
-    Expense.findAll({ where : { userId: req.user.id}}).then(expenses => {
-        return res.status(200).json({expenses, success: true})
-    })
-    .catch(err => {
-        console.log(err)
-        return res.status(500).json({ error: err, success: false})
-    })
-}
-
-const deleteexpense = (req, res) => {
-    const expenseid = req.params.expenseid;
-    if(expenseid == undefined || expenseid.length === 0){
-        return res.status(400).json({success: false, })
-    }
-    Expense.destroy({where: { id: expenseid, userId: req.user.id }}).then((noofrows) => {
-        if(noofrows === 0){
-            return res.status(404).json({success: false, message: 'Expense doenst belong to the user'})
+    try{
+        const expenseamount = req.body.expenseamount;
+        const description = req.body.description;
+        const category = req.body.category;
+        
+        if(expenseamount == undefined || expenseamount.length === 0 ){
+            return res.status(400).json({success: false, message: 'Parameters missing'})
         }
-        return res.status(200).json({ success: true, message: "Deleted Successfuly"})
-    }).catch(err => {
-        console.log(err);
-        return res.status(500).json({ success: true, message: "Failed"})
-    })
+        const expence = await Expense.create({
+            expenseamount:expenseamount,
+            category:category,
+            description:description,
+        })
+        return res.status(201).json({expence:expence,success:true});
+    }
+    catch(error){
+        return res.status(500).json({success:false,error:error})
+    }
+}
+exports.getExpenses = async(req,res)=>{
+    try {
+        // const expenses = await Expense.findAll({where:{userId: req.body.id}})
+        const expenses = await Expense.findAll()
+        return res.status(200).json({expences:expenses,success:true});
+    } catch (error) {
+        return res.status(200).json({error:error,success:false})
+    }
 }
 
-module.exports = {
-    deleteexpense,
-    getexpenses,
-    addexpense
+exports.deleteExpense = async (req,res)=>{
+    try {
+        const expenseid = req.params.expenseid;
+        
+        if(expenseid == undefined || expenseid.length === 0){
+            return res.status(400).json({success: false, })
+        }
+        console.log(expenseid);
+        // await Expense.destroy({where:{id:expenseid,userId:req.body.id}})
+        await Expense.destroy({where:{id:expenseid}})
+        return res.status(200).json({success:true,message:"Deleted Successfully"})
+    } catch (error) {
+        return res.status(500).json({ success: true, message: "Failed"})
+    }
 }

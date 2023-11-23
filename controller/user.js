@@ -14,6 +14,7 @@ exports.PostSignup = async (req,res,next)=>{
             password: hash
         })
         res.status(201).json({message: "successfully created new user"});
+
     })
     }
     catch(err){
@@ -22,25 +23,27 @@ exports.PostSignup = async (req,res,next)=>{
 }
 
 exports.PostLogin = (req,res,next)=>{
+
     const email = req.body.email;
     const password = req.body.password;
     //console.log(email,password);
     
-    Users.findOne({where:{email:email}})
-    .then(result=>{
-        if(result === null)
+    Users.findAll({where:{email:email}})
+    .then(user=>{
+        if(user.length === 0)
         {
             return res.status(404).json({
                 success:false,message: "User Doesnot Exists",
             })
         }
         else{
-        bcrypt.compare(password, result.password,(err,response)=>{
-            if(err)
+        bcrypt.compare(password, user[0].password,(err,response)=>{
+            console.log(response);
+            if(response === false)
             {
                 res.status(401).json({success:false,message:"Password Is Incorrect"})
             }
-            if(!err)
+            else if(response === true)
             {
               res.status(201).json({success: true, message: "user Logged In Successfully"});
             }
