@@ -7,9 +7,14 @@ const app = express();
 const sequelize = require("./connection/database");
 const User = require("./models/user");
 const Expence = require("./models/expence");
+const Order = require("./models/orders")
 
 const userRoutes = require("./routes/user");
+const purchaseRoutes = require('./routes/purchase')
 const expenseRoutes = require("./routes/expence");
+
+const dotenv = require("dotenv");
+dotenv.config();
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cors())
@@ -17,9 +22,13 @@ app.use(express.json());
 
 app.use(userRoutes);
 app.use(expenseRoutes);
+app.use('/purchase', purchaseRoutes)
 
 User.hasMany(Expence);
 Expence.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 sequelize
 .sync()
