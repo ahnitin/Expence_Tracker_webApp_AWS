@@ -2,7 +2,7 @@ const Users = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-exports.PostSignup = async (req,res,next)=>{
+const PostSignup = async (req,res,next)=>{
     try{
     const username = req.body.username;
     const email  = req.body.email;
@@ -23,11 +23,11 @@ exports.PostSignup = async (req,res,next)=>{
         res.status(500).json(err)
     }
 }
-function generateAccessToken(id){
+const generateAccessToken=(id)=>{
     return jwt.sign({userId: id},'secretkey')
 }
 
-exports.PostLogin = (req,res,next)=>{
+const PostLogin = (req,res,next)=>{
 
     const email = req.body.email;
     const password = req.body.password;
@@ -61,4 +61,9 @@ exports.PostLogin = (req,res,next)=>{
             success: false,    
         })
     })
+}
+module.exports ={
+    PostSignup,
+    PostLogin,
+    generateAccessToken
 }

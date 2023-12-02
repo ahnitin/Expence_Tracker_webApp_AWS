@@ -1,16 +1,17 @@
 const Razorpay = require("razorpay")
 const Order = require('../models/orders')
-const userController = require('./user')
+const userController = require("./user")
 
 
 exports.purchasepremium =async (req, res) => {
     try {
-        console.log("hey itls")
+        
         var rzp = new Razorpay({
 
             key_id: process.env.RAZORPAY_KEY_ID,
             key_secret: process.env.RAZORPAY_KEY_SECRET
         })
+        console.log("hey itls")
         const amount = 2500;
 
         rzp.orders.create({amount, currency: "INR"}, (err, order) => {
@@ -39,7 +40,7 @@ exports.purchasepremium =async (req, res) => {
         const promise2 =  req.user.update({ ispremiumuser: true }) 
 
         Promise.all([promise1, promise2]).then(()=> {
-            return res.status(202).json({sucess: true, message: "Transaction Successful", token: userController.generateAccessToken(userId,undefined , true) });
+            return res.status(202).json({sucess: true, message: "Transaction Successful", token: userController.generateAccessToken(userId) });
         }).catch((error ) => {
             throw new Error(error)
         })

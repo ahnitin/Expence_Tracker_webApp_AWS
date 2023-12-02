@@ -12,8 +12,10 @@ const Order = require("./models/orders")
 const userRoutes = require("./routes/user");
 const purchaseRoutes = require('./routes/purchase')
 const expenseRoutes = require("./routes/expence");
+const premiumRoutes = require("./routes/premiumFeature");
 
 const dotenv = require("dotenv");
+const Razorpay = require("razorpay")
 dotenv.config();
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use('/purchase', purchaseRoutes)
+app.use(premiumRoutes)
 
 User.hasMany(Expence);
 Expence.belongsTo(User);
