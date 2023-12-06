@@ -5,12 +5,7 @@ exports.authenticate = (req, res, next) => {
     try {
         const token = req.header("Authorization");
         console.log(token)
-        // if (!token || !token.startsWith("Bearer ")) {
-        //     throw new Error("JWT must be provided");
-        // }
-    
         const user = jwt.verify(token, "secretkey");
-        
         console.log(user)
         if (!user || !user.userId) {
             throw new Error("Invalid user in token");

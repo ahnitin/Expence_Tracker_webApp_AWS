@@ -50,12 +50,12 @@ exports.deleteExpense = async (req,res)=>{
     }
 }
 
-exports.checkPremium = async (req,res)=>{
-    try {
-        const user = await User.findOne({where:{id: req.user.id}})
-        //const expenses = await Expense.findAll()
-        return res.status(200).json({user:user,success:true});
-    } catch (error) {
-        return res.status(200).json({error:error,success:false})
-    }
-}
+// exports.checkPremium = async (req,res)=>{
+//     try {
+//         const user = await User.findOne({where:{id: req.user.id}})
+//         //const expenses = await Expense.findAll()
+//         return res.status(200).json({user:user,success:true});
+//     } catch (error) {
+//         return res.status(200).json({error:error,success:false})
+//     }
+// }

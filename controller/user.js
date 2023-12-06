@@ -23,8 +23,8 @@ const PostSignup = async (req,res,next)=>{
         res.status(500).json(err)
     }
 }
-const generateAccessToken=(id)=>{
-    return jwt.sign({userId: id},'secretkey')
+const generateAccessToken=(id,name,ispremiumuser)=>{
+    return jwt.sign({userId: id,name:name,ispremiumuser},'secretkey')
 }
 
 const PostLogin = (req,res,next)=>{
@@ -50,7 +50,7 @@ const PostLogin = (req,res,next)=>{
             }
             else if(response === true)
             {
-              res.status(201).json({success: true, message: "user Logged In Successfully", token: generateAccessToken(user[0].id)});
+              res.status(201).json({success: true, message: "user Logged In Successfully", token: generateAccessToken(user[0].id,user[0].username,user[0].ispremiumuser)});
             }
         })
         }   
