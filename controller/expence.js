@@ -8,16 +8,31 @@ exports.addExpense = async (req,res)=>{
         const description = req.body.description;
         const category = req.body.category;
         const userId = req.user.id
-        
-        if(expenseamount == undefined || expenseamount.length === 0 ){
+        let TotalExpense = req.user.totalExpense;
+        if(TotalExpense ===  null)
+        {
+            TotalExpense=0;
+        }
+        TotalExpense = Number.parseInt(TotalExpense)
+        let Expenseamount = Number.parseInt(expenseamount)
+        if(expenseamount == undefined){
             return res.status(400).json({success: false, message: 'Parameters missing'})
         }
+        TotalExpense = TotalExpense + Expenseamount;
         const expence = await Expense.create({
             expenseamount:expenseamount,
             category:category,
             description:description,
             userId: userId,
         })
+        
+        await User.update({ totalExpense: TotalExpense}, {
+            where: {
+              id:userId
+            }
+          });
+        
+        
         return res.status(201).json({expence:expence,success:true});
     }
     catch(error){
@@ -37,11 +52,22 @@ exports.getExpenses = async(req,res)=>{
 exports.deleteExpense = async (req,res)=>{
     try {
         const expenseid = req.params.expenseid;
-        
+        let TotalExpense = req.user.totalExpense;
+        let userId = req.user.id;
         if(expenseid == undefined || expenseid.length === 0){
             return res.status(400).json({success: false, })
         }
-        console.log(expenseid);
+        let upexpense = await Expense.findByPk(expenseid);
+        let Expenseamount = upexpense.expenseamount;
+        TotalExpense = Number.parseInt(TotalExpense);
+        Expenseamount = Number.parseInt(Expenseamount);
+        TotalExpense = TotalExpense - Expenseamount;
+        await User.update({ totalExpense: TotalExpense}, {
+            where: {
+              id:userId
+            }
+          });
+
         await Expense.destroy({where:{id:expenseid,userId:req.user.id}})
         //await Expense.destroy({where:{id:expenseid}})
         return res.status(200).json({success:true,message:"Deleted Successfully"})
