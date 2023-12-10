@@ -69,8 +69,13 @@ const PostLogin = async (req,res,next)=>{
     }
     //console.log(email,password);
 }
+const ForgetPassword = async(req,res,next)=>{
+    const email = req.body.email;
+    console.log(email)
+}
 module.exports ={
     PostSignup,
     PostLogin,
-    generateAccessToken
+    generateAccessToken,
+    ForgetPassword
 }
