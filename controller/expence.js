@@ -1,8 +1,9 @@
 const Expense = require("../models/expence");
 const User = require("../models/user");
+const sequelize = require("../connection/database");
 
 exports.addExpense = async (req,res)=>{
-    
+    const t  = await sequelize.transaction();
     try{
         const expenseamount = req.body.expenseamount;
         const description = req.body.description;
@@ -24,18 +25,20 @@ exports.addExpense = async (req,res)=>{
             category:category,
             description:description,
             userId: userId,
-        })
+        },{transaction:t})
         
         await User.update({ totalExpense: TotalExpense}, {
             where: {
-              id:userId
-            }
+              id:userId,
+            },
+            transaction:t
           });
         
-        
+        await t.commit();
         return res.status(201).json({expence:expence,success:true});
     }
     catch(error){
+        await t.rollback();
         return res.status(500).json({success:false,error:error})
     }
 }
@@ -50,10 +53,12 @@ exports.getExpenses = async(req,res)=>{
 }
 
 exports.deleteExpense = async (req,res)=>{
+    const t = await sequelize.transaction();
     try {
         const expenseid = req.params.expenseid;
         let TotalExpense = req.user.totalExpense;
         let userId = req.user.id;
+
         if(expenseid == undefined || expenseid.length === 0){
             return res.status(400).json({success: false, })
         }
@@ -65,13 +70,16 @@ exports.deleteExpense = async (req,res)=>{
         await User.update({ totalExpense: TotalExpense}, {
             where: {
               id:userId
-            }
+            },
+            transaction:t
           });
 
-        await Expense.destroy({where:{id:expenseid,userId:req.user.id}})
+        await Expense.destroy({where:{id:expenseid,userId:req.user.id}},{transaction:t})
         //await Expense.destroy({where:{id:expenseid}})
+        await t.commit();
         return res.status(200).json({success:true,message:"Deleted Successfully"})
     } catch (error) {
+        await t.rollback();
         return res.status(500).json({ success: true, message: "Failed"})
     }
 }

@@ -21,7 +21,7 @@ const getUserLeaderBoard = async (req, res) => {
         const leaderboardofusers = await User.findAll({
             attributes:['id','username','totalExpense'],
             group:['id'],
-            order:['totalExpense','DESC']
+            order:[['totalExpense','DESC']]
         })
        
         res.status(200).json(leaderboardofusers)
