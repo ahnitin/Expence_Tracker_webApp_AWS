@@ -1,4 +1,4 @@
-const Users = require("../models/user");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sequelize = require("../connection/database");
@@ -12,7 +12,7 @@ const PostSignup = async (req,res,next)=>{
     console.log(username,email,password);
     const saltrounds =10;
     bcrypt.hash(password, saltrounds, async(err,hash)=>{
-        await Users.create({
+        await User.create({
             username:username,
             email:email,
             password: hash
@@ -36,7 +36,7 @@ const PostLogin = async (req,res,next)=>{
     try {
         const email = req.body.email;
         const password = req.body.password;
-        let user = await Users.findAll({where:{email:email}},{transaction:t});
+        let user = await User.findAll({where:{email:email}},{transaction:t});
         if(user.length === 0)
         {
             await t.rollback();
@@ -69,13 +69,9 @@ const PostLogin = async (req,res,next)=>{
     }
     //console.log(email,password);
 }
-const ForgetPassword = async(req,res,next)=>{
-    const email = req.body.email;
-    console.log(email)
-}
+
 module.exports ={
     PostSignup,
     PostLogin,
     generateAccessToken,
-    ForgetPassword
 }

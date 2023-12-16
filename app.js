@@ -8,11 +8,13 @@ const sequelize = require("./connection/database");
 const User = require("./models/user");
 const Expence = require("./models/expence");
 const Order = require("./models/orders")
+const Forgotpassword = require("./models/forgotpassword")
 
 const userRoutes = require("./routes/user");
 const purchaseRoutes = require('./routes/purchase')
 const expenseRoutes = require("./routes/expence");
 const premiumRoutes = require("./routes/premiumFeature");
+const passwordRoutes = require("./routes/resetPassword");
 
 const dotenv = require("dotenv");
 const Razorpay = require("razorpay")
@@ -22,16 +24,24 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(cors())
 app.use(express.json());
 
+
+
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use('/purchase', purchaseRoutes)
+
 app.use(premiumRoutes)
+
+app.use("/password",passwordRoutes)
 
 User.hasMany(Expence);
 Expence.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(Forgotpassword);
+Forgotpassword.belongsTo(User);
 
 sequelize
 .sync()
