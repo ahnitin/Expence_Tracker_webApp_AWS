@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+</head>
+<body>
+    <h1>Expense Tracker</h1>
+    <form id="expense-form">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+
+        <label for="income">Income:</label>
+        <input type="number" id="income" name="income">
+
+        <label for="expense">Expense:</label>
+        <input type="number" id="expense" name="expense">
+
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <h2>Expenses</h2>
+    <table id="expenses-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Income</th>
+                <th>Expense</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Expenses will be dynamically added here -->
+        </tbody>
+    </table>
+    <button onclick="showMonthlyReport()">Get Monthly Report</button>
+    <button onclick="showYearlyReport()">Get Yearly Report</button>
+
+<h3>Monthly Report:</h3>
+<p>Income: <span id="monthlyIncome"></span></p>
+<p>Expense: <span id="monthlyExpense"></span></p>
+
+<h3>Yearly Report:</h3>
+<p>Income: <span id="yearlyIncome"></span></p>
+<p>Expense: <span id="yearlyExpense"></span></p>
+
+    <script>
+ 
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>
