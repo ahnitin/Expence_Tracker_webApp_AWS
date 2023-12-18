@@ -7,7 +7,7 @@ const Forgotpassword = require("../models/forgotpassword");
 const { where } = require("sequelize");
 const client = Sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey = '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';
+apiKey.apiKey = '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';
 
 
 exports.ForgetPassword = async (req, res, next) => {

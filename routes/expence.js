@@ -9,6 +9,8 @@ router.post('/addexpense',userAuthentication.authenticate, expenseController.add
 
 router.get('/getexpenses' ,userAuthentication.authenticate,  expenseController.getExpenses )
 
+router.get("/download",userAuthentication.authenticate,expenseController.downloadExpense)
+
 //router.get("/checkpremium",userAuthentication.authenticate, expenseController.checkPremium)
 
 router.delete('/deleteexpense/:expenseid',userAuthentication.authenticate, expenseController.deleteExpense)
