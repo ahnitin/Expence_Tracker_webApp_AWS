@@ -1,7 +1,10 @@
 const Expense = require("../models/expence");
 const User = require("../models/user");
+const DownloadFiles = require("../models/downloadFiles");
 const sequelize = require("../connection/database");
 const AWS = require("aws-sdk");
+const UserServices = require("../services/userservices");
+const S3Services = require("../services/S3services");
 
 exports.addExpense = async (req,res)=>{
     const t  = await sequelize.transaction();
@@ -94,43 +97,38 @@ exports.deleteExpense = async (req,res)=>{
 //         return res.status(200).json({error:error,success:false})
 //     }
 // }
-function uploadToS3(stringifyExpense,filename)
-{
-    const BUCKET_NAME = 'expensetracker240';
-    const IAM_USER_KEY = process.env.IAM_USER_KEY;
-    const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
 
-    let s3bucket = new AWS.S3({
-        accessKeyId:IAM_USER_KEY,
-        secretAccessKey:IAM_USER_SECRET,
-        Bucket:BUCKET_NAME,
-    })
-
-    s3bucket.createBucket(()=>{
-        var params ={
-            Bucket: BUCKET_NAME,
-            Key: filename,
-            Body: stringifyExpense,
-
-            
-        }
-        s3bucket.upload(params,(err,data)=>{
-            if(err)
-            {
-                console.log("something went wrong")
-            }
-            else{
-                console.log("Success",data);
-            }
-        })
-    })
-}
 
 exports.downloadExpense = async(req,res,next)=>{
-    const expenses = await req.user.getExpenses();
-    console.log(expenses);
-    const stringifyExpense = JSON.stringify(expenses);
-    const filename  = "expense.txt";
-    const fileUrl = uploadToS3(stringifyExpense,filename);
-    res.status(200).json({fileUrl,success:true});
+    try {
+        const expenses = await UserServices.getExpenses(req);
+        const userId = req.user.id
+        const stringifyExpense = JSON.stringify(expenses);
+        console.log(stringifyExpense)
+        const filename  = `expense${userId}/${new Date()}.txt`;
+        let fileUrl = await S3Services.uploadToS3(stringifyExpense,filename)
+        const date = new Date().toDateString();
+        console.log(date);
+        await DownloadFiles.create({
+            url:fileUrl,
+            Date:date,
+            userId:req.user.id,
+        }) 
+        console.log(fileUrl,"data")
+        res.status(200).json({fileUrl,success:true});
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({fileUrl:"",success:false,error:error});
+    }
+
+}
+
+exports.downloadFiles = async(req,res)=>{
+    const id = req.user.id;
+    try {
+        let download = await DownloadFiles.findAll({where:{userId:id}})
+        res.status(201).json({dwd:download,success:true})
+    } catch (error) {
+        res.status(500).json({dwd:"",success:false});
+    }
 }

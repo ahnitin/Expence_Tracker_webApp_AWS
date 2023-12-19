@@ -9,10 +9,14 @@ router.post('/addexpense',userAuthentication.authenticate, expenseController.add
 
 router.get('/getexpenses' ,userAuthentication.authenticate,  expenseController.getExpenses )
 
+router.get("/downloadFiles",userAuthentication.authenticate,expenseController.downloadFiles)
+
 router.get("/download",userAuthentication.authenticate,expenseController.downloadExpense) 
 
 //router.get("/checkpremium",userAuthentication.authenticate, expenseController.checkPremium)
 
 router.delete('/deleteexpense/:expenseid',userAuthentication.authenticate, expenseController.deleteExpense)
+
+
 
 module.exports = router;
