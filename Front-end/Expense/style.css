@@ -298,3 +298,37 @@
     .delete-expense:hover {
       background-color: #f35656;
     }
+
+    .custom-select {
+      display: inline-block;
+      position: relative;
+      font-size: 14px;
+    }
+    
+    .custom-select select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+    
+    .custom-select select::-ms-expand {
+      display: none;
+    }
+    
+    .custom-select select:focus {
+      border-color: #007bff;
+    }
+    
+    /* Style to make it look like a button */
+    .custom-select select {
+      background-image: linear-gradient(45deg, transparent 50%, #ccc 50%), linear-gradient(135deg, #ccc 50%, transparent 50%);
+      background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
