@@ -7,5 +7,4 @@ router.post("/signup",userController.PostSignup);
 router.post("/login",userController.PostLogin);
 
 
-
 module.exports = router;

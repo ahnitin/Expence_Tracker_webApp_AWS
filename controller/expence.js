@@ -5,6 +5,8 @@ const sequelize = require("../connection/database");
 const AWS = require("aws-sdk");
 const UserServices = require("../services/userservices");
 const S3Services = require("../services/S3services");
+var item_perPage =4;
+
 
 exports.addExpense = async (req,res)=>{
     const t  = await sequelize.transaction();
@@ -48,9 +50,27 @@ exports.addExpense = async (req,res)=>{
 }
 exports.getExpenses = async(req,res)=>{
     try {
-        const expenses = await Expense.findAll({where:{userId: req.user.id}})
+        let page  = req.query.page || 1;
+        let item_perPage = Number.parseInt(req.query.item) || 4
+        let totalItems;
+        let total = await Expense.count();
+        totalItems = total;
+        const expenses = await Expense.findAll({
+            where:{userId: req.user.id},
+            offset: (page - 1) * item_perPage,
+            limit: item_perPage,
+        })
         //const expenses = await Expense.findAll()
-        return res.status(200).json({expences:expenses,success:true});
+        return res.status(200).json({
+            expences:expenses,
+            success:true,
+            currentPage :page,
+            hasNextPage:(item_perPage*page)< totalItems,
+            nextPage:page+1,
+            hasPreviousPage:page >1,
+            PreviousPage:page-1,
+            lastPage: Math.ceil(totalItems/item_perPage),
+        });
     } catch (error) {
         return res.status(200).json({error:error,success:false})
     }
@@ -107,7 +127,7 @@ exports.downloadExpense = async(req,res,next)=>{
         console.log(stringifyExpense)
         const filename  = `expense${userId}/${new Date()}.txt`;
         let fileUrl = await S3Services.uploadToS3(stringifyExpense,filename)
-        const date = new Date().toDateString();
+        const date = new Date().toLocaleDateString();
         console.log(date);
         await DownloadFiles.create({
             url:fileUrl,
