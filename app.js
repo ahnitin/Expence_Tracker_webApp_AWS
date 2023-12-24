@@ -2,7 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-//const path = require("path");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
 const sequelize = require("./connection/database");
 const User = require("./models/user");
@@ -21,9 +25,18 @@ const dotenv = require("dotenv");
 const Razorpay = require("razorpay")
 dotenv.config();
 
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    { flags:'a'}
+    )
+
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(helmet())
+app.use(compression())
+app.use(morgan('combined',{stream: accessLogStream}))
 app.use(cors())
 app.use(express.json());
+
 
 
 
@@ -47,11 +60,13 @@ Forgotpassword.belongsTo(User);
 User.hasMany(DownloadFiles);
 DownloadFiles.belongsTo(User);
 
+console.log(typeof(process.env.DATABASE_NAME))
+
 sequelize
 .sync()
 .then(res=>{
     console.log("success")
-    app.listen(3002);
+    app.listen(process.env.PORT || 3002);
 })
 .catch(err=>{
     console.log(err)

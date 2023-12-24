@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -28,7 +29,7 @@ const PostSignup = async (req,res,next)=>{
     }
 }
 const generateAccessToken=(id,name,ispremiumuser)=>{
-    return jwt.sign({userId: id,name:name,ispremiumuser},'secretkey')
+    return jwt.sign({userId: id,name:name,ispremiumuser},process.env.SECRET_KEY)
 }
 
 const PostLogin = async (req,res,next)=>{

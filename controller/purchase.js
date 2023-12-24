@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Razorpay = require("razorpay")
 const Order = require('../models/orders')
 const userController = require("./user")

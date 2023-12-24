@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require("../models/user");
 const ForgetPassword = require("../models/forgotpassword");
 const Sib = require("sib-api-v3-sdk");
@@ -7,7 +8,7 @@ const Forgotpassword = require("../models/forgotpassword");
 const { where } = require("sequelize");
 const client = Sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey = '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';
+apiKey.apiKey = process.env.SIB_API_KEY;
 
 
 exports.ForgetPassword = async (req, res, next) => {
