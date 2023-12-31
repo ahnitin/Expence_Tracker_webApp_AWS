@@ -25,6 +25,7 @@ const dotenv = require("dotenv");
 const Razorpay = require("razorpay")
 dotenv.config();
 
+
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname,'access.log'),
     { flags:'a'}
@@ -37,9 +38,12 @@ app.use(morgan('combined',{stream: accessLogStream}))
 app.use(cors())
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://cdn.jsdelivr.net");
+  next();
+});
 
-
-
+app.use(express.static('public'));
 app.use(userRoutes);
 app.use(expenseRoutes);
 app.use('/purchase', purchaseRoutes)
@@ -47,6 +51,16 @@ app.use('/purchase', purchaseRoutes)
 app.use(premiumRoutes)
 
 app.use("/password",passwordRoutes)
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, `${req.url}`), (err) => {
+    if (err) {
+      next(err);
+    }
+  });
+});
+
+
+// app.use(express.static(path.join(__dirname, 'public')));
 
 User.hasMany(Expence);
 Expence.belongsTo(User);
@@ -60,15 +74,15 @@ Forgotpassword.belongsTo(User);
 User.hasMany(DownloadFiles);
 DownloadFiles.belongsTo(User);
 
-console.log(typeof(process.env.DATABASE_NAME))
-
 sequelize
-.sync()
-.then(res=>{
-    console.log("success")
-    app.listen(process.env.PORT || 3002);
-})
-.catch(err=>{
-    console.log(err)
-})
-
+  .sync()
+  .then(() => {
+    console.log("Database synchronization successful.");
+    app.listen(process.env.PORT || 3000, () => {
+      console.log("Server running on port:", process.env.PORT || 3000);
+    });
+  })
+  .catch(err => {
+    console.error("Database synchronization error:", err);
+    console.error("Connection error details:", err.parent); // Log the detailed connection error
+  });

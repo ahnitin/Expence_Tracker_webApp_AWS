@@ -5,8 +5,7 @@ const userController = require("./user")
 const sequelize = require("../connection/database")
 
 exports.purchasepremium =async (req, res) => {
-    try {
-        
+    try { 
         var rzp = new Razorpay({
 
             key_id: process.env.RAZORPAY_KEY_ID,
@@ -14,18 +13,16 @@ exports.purchasepremium =async (req, res) => {
         })
         console.log("hey itls")
         const amount = 2500;
-
-        rzp.orders.create({amount, currency: "INR"}, (err, order) => {
-            if(err) {
-                throw new Error(JSON.stringify(err));
-            }
-            req.user.createOrder({ orderid: order.id, status: 'PENDING'}).then(() => {
-                return res.status(201).json({ order, key_id : rzp.key_id});
-
-            }).catch(err => {
-                throw new Error(err)
+        let order = await rzp.orders.create({amount, currency: "INR"})
+        if(!order)
+        {
+            return res.status(401).json({
+                message:"Some problem in Razorpay"
             })
-        })
+        }
+        await req.user.createOrder({ orderid: order.id, status: 'PENDING'})   
+        res.status(201).json({ order, key_id : rzp.key_id});
+
     } catch(err){
         console.log(err);
         res.status(403).json({ message: 'Sometghing went wrong', error: err})
