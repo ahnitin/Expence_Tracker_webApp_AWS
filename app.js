@@ -32,16 +32,12 @@ const accessLogStream = fs.createWriteStream(
     )
 
 app.use(bodyParser.urlencoded({extended:false}));
-app.use(helmet())
 app.use(compression())
 app.use(morgan('combined',{stream: accessLogStream}))
 app.use(cors())
 app.use(express.json());
 
-app.use((req, res, next) => {
-  res.setHeader("Content-Security-Policy", "script-src 'self' https://cdn.jsdelivr.net");
-  next();
-});
+
 
 app.use(express.static('public'));
 app.use(userRoutes);

@@ -22,7 +22,7 @@ function SignupUser(event)
 async function AddUserToDatabase(obj)
 {
     try {
-        let res = await axios.post("http://localhost:3000/signup",obj)
+        let res = await axios.post("http://18.214.108.81:3000/signup",obj)
         if(res.status == 201)
         {
             alert("User Added Successfully")

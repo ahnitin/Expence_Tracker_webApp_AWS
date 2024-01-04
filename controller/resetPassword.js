@@ -5,7 +5,6 @@ const Sib = require("sib-api-v3-sdk");
 const uuid = require("uuid");
 const bcrypt = require("bcrypt")
 const Forgotpassword = require("../models/forgotpassword");
-const { where } = require("sequelize");
 const client = Sib.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;

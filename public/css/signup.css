@@ -8,7 +8,10 @@ body {
     padding: 0;
     font-family: sans-serif;
     background: linear-gradient(#141e30, #2a6c56);
+    background-image: url("https://www.wellybox.com/wp-content/uploads/2021/01/6-business-expense-tracker-1024x1024.jpg");
+
 }
+
 
 .login-box {
     position: absolute;

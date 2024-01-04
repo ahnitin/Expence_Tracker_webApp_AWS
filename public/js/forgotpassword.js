@@ -1,3 +1,8 @@
+document.getElementById("forgot").addEventListener("submit",(event)=>{
+    forgetpassword(event);
+})
+
+
 async function forgetpassword(event)
 {
     event.preventDefault();
@@ -6,7 +11,7 @@ async function forgetpassword(event)
         email
     }
     try {
-        await axios.post("http://3.85.123.239:3000/password/forgotpassword",obj)
+        await axios.post("http://18.214.108.81:3000/password/forgotpassword",obj)
         console.log("ho gaya")
     } catch (error) {
         console.log(error)

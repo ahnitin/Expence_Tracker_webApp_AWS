@@ -15,7 +15,7 @@ async function LoginUser(event)
     }
 
     try {
-        let res = await axios.post("http://localhost:3000/login",obj)
+        let res = await axios.post("http://18.214.108.81:3000/login",obj)
         if(res.status === 201)
         {
             alert("User login sucessful");
@@ -25,6 +25,6 @@ async function LoginUser(event)
         
     } catch (error) {
         console.log(error)
-        document.body.innerHTML+= `<div style="color:red;"> ${error.response.data.message} </div>`;
+        document.body.innerHTML+= `<div style="color:red;"> ${error.response.data.message }</div>`
     }
 }

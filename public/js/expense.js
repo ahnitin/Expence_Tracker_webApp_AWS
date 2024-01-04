@@ -22,7 +22,7 @@ async function main() {
   try {
     const page = 1;
     const token = localStorage.getItem("token");
-    // let response = await axios.get("http://localhost:3000/checkpremium",{headers: {"Authorization": token}})
+    // let response = await axios.get("http://18.214.108.81:3000/checkpremium",{headers: {"Authorization": token}})
     // if(response.data.user.ispremiumuser != null)
     // {
     //     let li = document.createElement("h2")
@@ -44,7 +44,7 @@ async function main() {
       DownloadFiles();
     }
     let res = await axios.get(
-      `http://localhost:3000/getexpenses?page=${page}&item=${localStorage.getItem("item_perPage")}`,
+      `http://18.214.108.81:3000/getexpenses?page=${page}&item=${localStorage.getItem("item_perPage")}`,
       { headers: { Authorization: token } }
     );
     for (let i = 0; i < res.data.expences.length; i++) {
@@ -128,7 +128,7 @@ function Showpagination({
 async function GetExpenses(page) {
   console.log(page);
   const token = localStorage.getItem("token");
-  let res = await axios.get(`http://localhost:3000/getexpenses?page=${page}&item=${localStorage.getItem("item_perPage")}`, {
+  let res = await axios.get(`http://18.214.108.81:3000/getexpenses?page=${page}&item=${localStorage.getItem("item_perPage")}`, {
     headers: { Authorization: token },
   });
   clearExpenseTable();
@@ -174,7 +174,7 @@ async function AddToLocalStorage(obj) {
   try {
     console.log(obj);
     const token = localStorage.getItem("token");
-    let res = await axios.post("http://localhost:3000/addexpense", obj, {
+    let res = await axios.post("http://18.214.108.81:3000/addexpense", obj, {
       headers: { Authorization: token },
     });
     console.log(res);
@@ -214,7 +214,7 @@ function AddUsertoScreen(obj) {
   deletebtn.onclick = async () => {
     console.log(obj.id);
     const token = localStorage.getItem("token");
-    await axios.delete("http://localhost:3000/deleteexpense/" + obj.id, {
+    await axios.delete("http://18.214.108.81:3000/deleteexpense/" + obj.id, {
       headers: { Authorization: token },
     });
   };
@@ -233,13 +233,11 @@ downloadbtn.addEventListener("click", () => {
   console.log("happty");
   const token = localStorage.getItem("token");
   axios
-    .get("http://localhost:3000/download", {
+    .get("http://18.214.108.81:3000/download", {
       headers: { Authorization: token },
     })
     .then((response) => {
       if (response.status === 200) {
-        //the bcakend is essentially sending a download link
-        //  which if we open in browser, the file would download
         var a = document.createElement("a");
         a.href = response.data.fileUrl;
         a.download = "myexpense.csv";
@@ -259,7 +257,7 @@ document.getElementById("btn11").addEventListener("click", (event) => {
 async function purchase(event){
   const token = localStorage.getItem("token");
   const res = await axios.get(
-    "http://localhost:3000/purchase/premiummembership",
+    "http://18.214.108.81:3000/purchase/premiummembership",
     { headers: { Authorization: token } }
   );
   var options = {
@@ -267,7 +265,7 @@ async function purchase(event){
     order_id: res.data.order.id,
     handler: async function (res) {
       const response = await axios.post(
-        "http://localhost:3000/purchase/updatetransactionstatus",
+        "http://18.214.108.81:3000/purchase/updatetransactionstatus",
         {
           order_id: options.order_id,
           payment_id: res.razorpay_payment_id,
@@ -303,7 +301,7 @@ function showLeaderBoard() {
   LBbtn.onclick = async () => {
     const token = localStorage.getItem("token");
     const userLeaderBoard = await axios.get(
-      "http://localhost:3000/showLeaderBoard"
+      "http://18.214.108.81:3000/showLeaderBoard"
     );
     console.log(userLeaderBoard);
 
@@ -341,7 +339,7 @@ function showError(err) {
 async function DownloadFiles() {
   try {
     const token = localStorage.getItem("token");
-    let res = await axios.get("http://localhost:3000/downloadFiles", {
+    let res = await axios.get("http://18.214.108.81:3000/downloadFiles", {
       headers: { Authorization: token },
     });
     if (!res) {
